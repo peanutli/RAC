@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "ReactiveCocoa.h"
+#import "MessageViewController.h"
 
 @interface ViewController ()
 
@@ -15,22 +16,49 @@
 
 @implementation ViewController
 
+
+- (void)goVC{
+    MessageViewController * VC = [[MessageViewController alloc]init];
+    RACSubject * subject = [RACSubject subject];
+    [subject subscribeNext:^(id x) {
+        NSLog(@"MessageViewController发过来的消息%@",x);
+        self.view.backgroundColor = [UIColor greenColor];
+    }];
+    VC.subject = subject;
+    [self presentViewController:VC animated:YES completion:nil];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    RACSignal * signal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
-        NSLog(@"调用了RACSignal");
-        [subscriber sendNext:@"hello world"];
-        return [RACDisposable disposableWithBlock:^{
-            NSLog(@"取消订阅");
-        }];
-    }];
     
-    RACDisposable * disposable = [signal subscribeNext:^(id x) {
+    UIButton * button = [[UIButton alloc]initWithFrame:self.view.bounds];
+    [button addTarget:self action:@selector(goVC) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button];
+    
+    
+//    RACSignal * signal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+//        NSLog(@"调用了RACSignal");
+//        [subscriber sendNext:@"hello world"];
+//        return [RACDisposable disposableWithBlock:^{
+//            NSLog(@"取消订阅");
+//        }];
+//    }];
+//    
+//    RACDisposable * disposable = [signal subscribeNext:^(id x) {
+//        NSLog(@"%@",x);
+//    }];
+//    
+//    [disposable dispose];
+    
+    //RACSubject 信号提供者
+    RACSubject * subject = [RACSubject subject];
+    
+    [subject subscribeNext:^(id x) {
         NSLog(@"%@",x);
     }];
     
-    [disposable dispose];
+    [subject sendNext:@"1"];
  
     
     // Do any additional setup after loading the view, typically from a nib.
