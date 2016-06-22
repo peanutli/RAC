@@ -1,0 +1,3 @@
+platform:ios, '8.0'   
+pod 'AFNetworking', '~> 2.3.1'
+pod 'ReactiveCocoa', '~> 2.5'
