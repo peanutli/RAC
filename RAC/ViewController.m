@@ -36,6 +36,17 @@
     [button addTarget:self action:@selector(goVC) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
     
+    RACReplaySubject * subject = [RACReplaySubject subject];
+    [subject subscribeNext:^(id x) {
+        NSLog(@"====:%@",x);
+    }];
+    
+//    [subject subscribeNext:^(id x) {
+//        NSLog(@"+++++:%@",x);
+//    }];
+    [subject sendNext:@10];
+    [subject sendNext:@20];
+    
     
 //    RACSignal * signal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
 //        NSLog(@"调用了RACSignal");
@@ -52,13 +63,13 @@
 //    [disposable dispose];
     
     //RACSubject 信号提供者
-    RACSubject * subject = [RACSubject subject];
-    
-    [subject subscribeNext:^(id x) {
-        NSLog(@"%@",x);
-    }];
-    
-    [subject sendNext:@"1"];
+//    RACSubject * subject = [RACSubject subject];
+//    
+//    [subject subscribeNext:^(id x) {
+//        NSLog(@"%@",x);
+//    }];
+//    
+//    [subject sendNext:@"1"];
  
     
     // Do any additional setup after loading the view, typically from a nib.
