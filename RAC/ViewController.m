@@ -36,16 +36,32 @@
     [button addTarget:self action:@selector(goVC) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
     
-    RACReplaySubject * subject = [RACReplaySubject subject];
-    [subject subscribeNext:^(id x) {
-        NSLog(@"====:%@",x);
+    RACCommand * command = [[RACCommand alloc]initWithSignalBlock:^RACSignal *(id input) {
+        NSLog(@"%@",input);
+        return [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+            [subscriber sendNext:@1];
+            return nil;
+        }];
     }];
     
+    [command.executionSignals subscribeNext:^(id x) {
+        [x subscribeNext:^(id x) {
+            NSLog(@"%@",x);
+        }];
+    }];
+    
+    [command execute:@1];
+    
+//    RACReplaySubject * subject = [RACReplaySubject subject];
 //    [subject subscribeNext:^(id x) {
-//        NSLog(@"+++++:%@",x);
+//        NSLog(@"====:%@",x);
 //    }];
-    [subject sendNext:@10];
-    [subject sendNext:@20];
+//    
+////    [subject subscribeNext:^(id x) {
+////        NSLog(@"+++++:%@",x);
+////    }];
+//    [subject sendNext:@10];
+//    [subject sendNext:@20];
     
     
 //    RACSignal * signal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
